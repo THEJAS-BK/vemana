@@ -33,6 +33,7 @@ import Analytics from './views/Analytics';
 import AdminPanel from './views/AdminPanel';
 import Login from './views/Login';
 import VerifyTransaction from './views/VerifyTransaction';
+import NotificationBell from './components/NotificationBell';
 
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -129,10 +130,7 @@ function Header() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="p-2.5 text-white/40 hover:bg-white/10 rounded-full transition-colors relative">
-            <Bell size={18} />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-fuchsia-500 rounded-full shadow-[0_0_8px_rgba(192,38,211,0.5)]" />
-          </button>
+          <NotificationBell />
           <button className="p-2.5 text-white/40 hover:bg-white/10 rounded-full transition-colors">
             <HelpCircle size={18} />
           </button>

@@ -28,7 +28,7 @@ export default function Dashboard() {
           api.getAnalytics(),
           api.health(),
         ]);
-        setTransactions(txRes.data.slice(0, 5));
+        setTransactions(txRes.data); // Store all for calculation
         setFlaggedCount(analyticsRes.data.flaggedCount);
         setTotalVolume(analyticsRes.data.totalVolume);
         setTotalCount(analyticsRes.data.totalTransactions);
@@ -41,6 +41,35 @@ export default function Dashboard() {
     }
     load();
   }, []);
+
+  // Department Aggregation Logic
+  const departmentStats = Object.values(
+    transactions.reduce((acc, tx) => {
+      const dept = tx.sender;
+      if (!acc[dept]) {
+        acc[dept] = { name: dept, total: 0, count: 0, flagged: 0 };
+      }
+      acc[dept].total += tx.amount;
+      acc[dept].count += 1;
+      if (tx.flagResult.status === 'suspicious') {
+        acc[dept].flagged += 1;
+      }
+      return acc;
+    }, {} as Record<string, { name: string; total: number; count: number; flagged: number }>)
+  ).map(d => {
+    const flagRate = (d.flagged / d.count) * 100;
+    const avgSpend = d.total / d.count;
+    let status: 'Healthy' | 'Watch' | 'Critical' = 'Healthy';
+    let color = 'border-emerald-500/20 text-emerald-400 bg-emerald-500/5';
+    if (flagRate > 30) {
+      status = 'Critical';
+      color = 'border-red-500/20 text-red-400 bg-red-500/5';
+    } else if (flagRate > 10) {
+      status = 'Watch';
+      color = 'border-amber-500/20 text-amber-400 bg-amber-500/5';
+    }
+    return { ...d, flagRate, avgSpend, status, color };
+  });
 
   const nodeStatus = health
     ? health.blockchain === 'ok' && health.mongodb === 'ok'
@@ -77,9 +106,9 @@ export default function Dashboard() {
       {/* Hero */}
       <section className="relative flex-1 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-[2.5rem] overflow-hidden backdrop-blur-sm group min-h-[360px] flex items-center p-12">
         <img
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200&h=800"
+          src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200&h=800"
           className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50 group-hover:scale-105 transition-transform duration-1000"
-          alt="Abstract"
+          alt="Neural Network"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
         <div className="relative z-10 space-y-6">
@@ -140,6 +169,81 @@ export default function Dashboard() {
         ))}
       </section>
 
+      {/* Department Health Dashboard */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-black text-white uppercase tracking-[0.2em]">Departmental Health Triage</h3>
+            <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest mt-1">Integrity analysis by spending branch</p>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span className="text-[9px] font-black text-white/40 uppercase">Healthy</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-amber-400" />
+              <span className="text-[9px] font-black text-white/40 uppercase">Watch</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-red-400" />
+              <span className="text-[9px] font-black text-white/40 uppercase">Critical</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {departmentStats.map((dept, i) => (
+            <motion.div
+              key={dept.name}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 + i * 0.05 }}
+              className={cn(
+                "p-6 rounded-3xl border transition-all hover:scale-[1.02] cursor-default shadow-lg",
+                dept.color
+              )}
+            >
+              <div className="flex justify-between items-start mb-6">
+                <div className="p-2 bg-white/10 rounded-lg border border-white/10">
+                  <Landmark size={14} />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest">{dept.status}</span>
+              </div>
+              
+              <h4 className="text-xs font-black text-white uppercase tracking-wider mb-4 truncate">{dept.name}</h4>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="opacity-40 font-bold uppercase tracking-widest">Total Spent</span>
+                  <span className="text-white font-bold">{formatINR(dept.total)}</span>
+                </div>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="opacity-40 font-bold uppercase tracking-widest">Flag Rate</span>
+                  <span className={cn("font-bold", dept.flagRate > 20 ? "text-red-400" : "text-white")}>
+                    {dept.flagRate.toFixed(1)}%
+                  </span>
+                </div>
+                <div className="flex justify-between items-center text-[10px]">
+                  <span className="opacity-40 font-bold uppercase tracking-widest">Avg Artifact</span>
+                  <span className="text-white font-bold">{formatINR(dept.avgSpend)}</span>
+                </div>
+              </div>
+
+              {/* Mini Health Bar */}
+              <div className="mt-6 w-full h-1 bg-black/20 rounded-full overflow-hidden">
+                <div 
+                  className={cn("h-full rounded-full transition-all duration-1000", 
+                    dept.status === 'Healthy' ? 'bg-emerald-400' : dept.status === 'Watch' ? 'bg-amber-400' : 'bg-red-400'
+                  )}
+                  style={{ width: `${100 - dept.flagRate}%` }}
+                />
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
       {/* Transaction Table */}
       <section className="glass-card overflow-hidden">
         <div className="px-10 py-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
@@ -172,7 +276,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/[0.03]">
-                {transactions.map((tx, i) => {
+                {transactions.slice(0, 5).map((tx, i) => {
                   const isFlagged = tx.flagResult.status === 'suspicious';
                   return (
                     <motion.tr
