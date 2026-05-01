@@ -94,3 +94,4 @@ Generate high-fidelity, blockchain-verified PDF certificates for legal or audit 
 -   **Auditability**: Every transaction carries a unique Blockchain Hash and Parent Hash for cryptographic traceability.
 
 **Developed for the 2026 Institutional Governance Hackathon.**
+# vemana
