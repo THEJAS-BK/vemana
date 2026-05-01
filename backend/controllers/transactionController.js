@@ -86,7 +86,7 @@ exports.createTransaction = async (req, res) => {
     const ts = timestamp || Math.floor(Date.now() / 1000);
 
     // 1. Write to blockchain
-    const { txId, blockchainHash, blockNumber } =
+    const { txId, blockchainHash, blockHash, blockNumber, gasUsed } =
       await blockchainService.writeTransaction(sender, receiver, amount, ts);
 
     // 2. Call Python fraud detection
@@ -112,7 +112,7 @@ exports.createTransaction = async (req, res) => {
       },
     });
 
-    res.status(201).json({ success: true, data: tx });
+    res.status(201).json({ success: true, data: { ...tx.toObject(), gasUsed, blockHash } });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }

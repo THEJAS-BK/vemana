@@ -19,8 +19,9 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { api, type User, type HealthStatus, getUser } from '../lib/api';
+import { motion } from 'motion/react';
+import { api, type User, type HealthStatus, getUser, type Transaction } from '../lib/api';
+import TransactionSimulator from '../components/TransactionSimulator';
 
 export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
@@ -37,19 +38,29 @@ export default function AdminPanel() {
   const [simReceiver, setSimReceiver] = useState('Central Public Works Dept');
   const [isSimulating, setIsSimulating] = useState(false);
   const [simResult, setSimResult] = useState<{ id: number, status: string } | null>(null);
+  const [showSimulator, setShowSimulator] = useState(false);
+  const [activeReceipt, setActiveReceipt] = useState<any>(null);
+  const [activeTxData, setActiveTxData] = useState<any>(null);
 
   const runSimulation = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSimulating(true);
     setSimResult(null);
     try {
-      const res = await api.createTransaction({
+      const txData = {
         sender: simSender,
         receiver: simReceiver,
         amount: Number(simAmount),
         timestamp: Math.floor(Date.now() / 1000)
-      });
+      };
+      
+      const res = await api.createTransaction(txData);
+      
+      setActiveTxData(txData);
+      setActiveReceipt(res.data);
+      setShowSimulator(true);
       setSimResult({ id: res.data.txId, status: res.data.flagResult.status });
+      
       // Refresh user/health data
       const [u, h] = await Promise.all([api.getUsers(), api.health()]);
       setUsers(u.data);
@@ -322,6 +333,18 @@ export default function AdminPanel() {
           </ul>
         </div>
       </div>
+
+      {showSimulator && activeReceipt && (
+        <TransactionSimulator
+          txData={activeTxData}
+          receipt={activeReceipt}
+          onComplete={() => setShowSimulator(false)}
+          onError={(err) => {
+            setShowSimulator(false);
+            alert(err);
+          }}
+        />
+      )}
     </div>
   );
 }

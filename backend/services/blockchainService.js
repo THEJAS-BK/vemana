@@ -39,7 +39,9 @@ async function writeTransaction(sender, receiver, amount, timestamp) {
   return {
     txId,
     blockchainHash: receipt.hash,
+    blockHash: receipt.blockHash,
     blockNumber: receipt.blockNumber,
+    gasUsed: Number(receipt.gasUsed),
   };
 }
 
