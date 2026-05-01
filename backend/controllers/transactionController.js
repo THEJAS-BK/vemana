@@ -51,6 +51,27 @@ exports.getTransaction = async (req, res) => {
   }
 };
 
+// GET /api/transactions/verify/:id (Public scan)
+exports.verifyTransaction = async (req, res) => {
+  try {
+    const txId = parseInt(req.params.id);
+    const tx = await Transaction.findOne({ txId });
+    if (!tx) {
+      return res.status(404).json({ success: false, error: "Transaction not found" });
+    }
+
+    // Public view: Always mask sensitive AI reasoning for anonymous scans
+    const result = tx.toObject();
+    if (result.flagResult) {
+      result.flagResult.reason = "RESTRICTED: Authorized Personnel Only";
+    }
+
+    res.json({ success: true, data: result });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 // POST /api/transactions
 exports.createTransaction = async (req, res) => {
   try {

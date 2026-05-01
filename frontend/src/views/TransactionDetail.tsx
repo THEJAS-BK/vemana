@@ -11,7 +11,9 @@ import {
   AlertTriangle,
   Check,
   Copy,
+  QrCode,
 } from 'lucide-react';
+import TransactionQR from '../components/TransactionQR';
 import { cn, formatCurrency } from '../lib/utils';
 import { Link, useParams } from 'react-router-dom';
 import { api, type Transaction, formatINR, formatTimestamp } from '../lib/api';
@@ -22,6 +24,7 @@ export default function TransactionDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -107,6 +110,13 @@ export default function TransactionDetail() {
             </div>
           </div>
           <div className="flex gap-4">
+            <button 
+              onClick={() => setShowQR(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 text-white font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-white/10 transition-all active:scale-95"
+            >
+              <QrCode size={16} />
+              Verify QR
+            </button>
             <button
               onClick={handleExportPDF}
               className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(192,38,211,0.2)] hover:bg-secondary-container transition-all active:scale-95"
@@ -333,6 +343,13 @@ export default function TransactionDetail() {
           </div>
         </div>
       </div>
+
+      {showQR && tx && (
+        <TransactionQR 
+          tx={tx} 
+          onClose={() => setShowQR(false)} 
+        />
+      )}
     </div>
   );
 }

@@ -7,7 +7,9 @@ import {
   ArrowDownToLine,
   ChevronDown,
   RefreshCw,
+  QrCode,
 } from 'lucide-react';
+import TransactionQR from '../components/TransactionQR';
 import { cn } from '../lib/utils';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -19,6 +21,7 @@ export default function Transactions() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedTxForQR, setSelectedTxForQR] = useState<Transaction | null>(null);
 
   useEffect(() => {
     api.getTransactions().then((res) => {
@@ -200,9 +203,18 @@ export default function Transactions() {
                         </span>
                       </td>
                       <td className="px-10 py-6 text-right">
-                        <Link to={`/transactions/${tx.txId}`} className="p-2.5 hover:bg-white/10 rounded-xl text-white/20 hover:text-white transition-all inline-block">
-                          <MoreVertical size={16} />
-                        </Link>
+                        <div className="flex items-center justify-end gap-2">
+                          <button 
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setSelectedTxForQR(tx); }}
+                            className="p-2.5 hover:bg-white/10 rounded-xl text-white/20 hover:text-indigo-400 transition-all inline-block"
+                            title="Generate QR Token"
+                          >
+                            <QrCode size={16} />
+                          </button>
+                          <Link to={`/transactions/${tx.txId}`} className="p-2.5 hover:bg-white/10 rounded-xl text-white/20 hover:text-white transition-all inline-block">
+                            <MoreVertical size={16} />
+                          </Link>
+                        </div>
                       </td>
                     </motion.tr>
                   );
@@ -217,6 +229,13 @@ export default function Transactions() {
           </div>
         </div>
       </div>
+
+      {selectedTxForQR && (
+        <TransactionQR 
+          tx={selectedTxForQR} 
+          onClose={() => setSelectedTxForQR(null)} 
+        />
+      )}
     </div>
   );
 }

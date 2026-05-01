@@ -32,6 +32,7 @@ import TransactionDetail from './views/TransactionDetail';
 import Analytics from './views/Analytics';
 import AdminPanel from './views/AdminPanel';
 import Login from './views/Login';
+import VerifyTransaction from './views/VerifyTransaction';
 
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -195,6 +196,7 @@ export default function App() {
         <Route path="/dashboard" element={<MainLayout><Dashboard /></MainLayout>} />
         <Route path="/transactions" element={<MainLayout><Transactions /></MainLayout>} />
         <Route path="/transactions/:id" element={<MainLayout><TransactionDetail /></MainLayout>} />
+        <Route path="/verify/:txId" element={<VerifyTransaction />} />
         <Route path="/analytics" element={<MainLayout><Analytics /></MainLayout>} />
         <Route path="/admin" element={<MainLayout><AdminPanel /></MainLayout>} />
 

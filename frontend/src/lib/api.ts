@@ -83,6 +83,9 @@ export const api = {
   getTransaction: (id: number | string) =>
     request<{ success: boolean; data: Transaction }>(`/transactions/${id}`),
 
+  verifyTransaction: (id: number | string) =>
+    request<{ success: boolean; data: Transaction }>(`/transactions/verify/${id}`),
+
   createTransaction: (body: {
     sender: string;
     receiver: string;

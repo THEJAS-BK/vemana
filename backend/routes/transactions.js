@@ -7,6 +7,9 @@ const { protect, checkRole } = require("../middleware/auth");
 router.get("/", protect, controller.getAllTransactions);
 router.get("/:id", protect, controller.getTransaction);
 
+// Public verification (No Auth)
+router.get("/verify/:id", controller.verifyTransaction);
+
 // Only Admin can create (simulate)
 router.post("/", protect, checkRole("admin"), controller.createTransaction);
 
