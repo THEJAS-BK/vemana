@@ -60,53 +60,72 @@
   /* Hide UI elements */
   aside, 
   nav, 
+  header,
   button, 
   .no-print,
-  .animate-in {
+  .atmospheric-element,
+  .fixed.inset-0,
+  [class*="bg-indigo-600/10"],
+  [class*="bg-fuchsia-600/5"] {
     display: none !important;
   }
 
   /* Reset layout for paper */
-  body, #root {
+  body, #root, .flex-1, main {
     background: white !important;
     color: black !important;
     padding: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    display: block !important;
+    overflow: visible !important;
   }
 
-  main {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-  }
-
-  .glass-card {
+  .glass-card, .bg-slate-900, .bg-white\/5, .bg-white\/\[0\.02\] {
     background: white !important;
-    border: 1px solid #eee !important;
+    border: 1px solid #ddd !important;
     box-shadow: none !important;
     color: black !important;
-    border-radius: 0 !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    backdrop-filter: none !important;
   }
 
-  .cert-border {
-    border: 2px solid #000 !important;
+  /* Force visibility of all text */
+  p, span, h1, h2, h3, h4, div {
+    color: black !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
   }
 
-  /* Color resets for legibility on white paper */
-  .text-white { color: #000 !important; }
-  .text-white\/80 { color: #111 !important; }
-  .text-white\/60 { color: #333 !important; }
-  .text-white\/40 { color: #666 !important; }
-  .text-white\/30 { color: #888 !important; }
-  .text-white\/20 { color: #aaa !important; }
-  .text-secondary { color: #c026d3 !important; }
-  .bg-white\/5 { background-color: #f9f9f9 !important; }
-  .bg-white\/\[0\.02\] { background-color: #fafafa !important; }
+  .text-white, .text-white\/80, .text-white\/60, .text-white\/40, .text-white\/30, .text-white\/20, .text-white\/10 {
+    color: black !important;
+  }
+
+  /* Data-specific styling */
+  .font-mono, .font-data {
+    color: #000 !important;
+    background: #f4f4f4 !important;
+    padding: 4px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+  }
+
+  /* Ensure the main container is visible */
+  .p-10 {
+    padding: 20px !important;
+  }
+
+  .animate-in, .motion-div {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 
   /* Force colors to show in PDF */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    background-color: transparent !important;
   }
 }

@@ -35,8 +35,8 @@ export interface Transaction {
   timestamp: number;
   blockchainHash: string;
   blockNumber: number;
-  flagResult: { 
-    status: 'clean' | 'suspicious' | 'unknown'; 
+  flagResult: {
+    status: 'clean' | 'suspicious' | 'unknown';
     reason: string;
     source?: 'python' | 'fallback';
   };
@@ -45,6 +45,7 @@ export interface Transaction {
 
 export interface Analytics {
   monthlyTotals: { month: string; total: number; count: number }[];
+  topReceivers: { name: string; total: number; count: number }[];
   flaggedCount: number;
   totalTransactions: number;
   totalVolume: number;

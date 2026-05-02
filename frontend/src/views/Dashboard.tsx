@@ -43,6 +43,8 @@ export default function Dashboard() {
   }, []);
 
   // Department Aggregation Logic
+  type DeptStat = { name: string; total: number; count: number; flagged: number };
+
   const departmentStats = Object.values(
     transactions.reduce((acc, tx) => {
       const dept = tx.sender;
@@ -55,8 +57,8 @@ export default function Dashboard() {
         acc[dept].flagged += 1;
       }
       return acc;
-    }, {} as Record<string, { name: string; total: number; count: number; flagged: number }>)
-  ).map(d => {
+    }, {} as Record<string, DeptStat>)
+  ).map((d: DeptStat) => {
     const flagRate = (d.flagged / d.count) * 100;
     const avgSpend = d.total / d.count;
     let status: 'Healthy' | 'Watch' | 'Critical' = 'Healthy';
@@ -210,9 +212,9 @@ export default function Dashboard() {
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest">{dept.status}</span>
               </div>
-              
+
               <h4 className="text-xs font-black text-white uppercase tracking-wider mb-4 truncate">{dept.name}</h4>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-[10px]">
                   <span className="opacity-40 font-bold uppercase tracking-widest">Total Spent</span>
@@ -232,8 +234,8 @@ export default function Dashboard() {
 
               {/* Mini Health Bar */}
               <div className="mt-6 w-full h-1 bg-black/20 rounded-full overflow-hidden">
-                <div 
-                  className={cn("h-full rounded-full transition-all duration-1000", 
+                <div
+                  className={cn("h-full rounded-full transition-all duration-1000",
                     dept.status === 'Healthy' ? 'bg-emerald-400' : dept.status === 'Watch' ? 'bg-amber-400' : 'bg-red-400'
                   )}
                   style={{ width: `${100 - dept.flagRate}%` }}

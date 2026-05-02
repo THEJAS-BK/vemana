@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion } from 'motion/react';
-import { api, type Analytics, formatINR } from '../lib/api';
+import { api, type Analytics, formatINR, type Transaction } from '../lib/api';
 
 export default function AnalyticsView() {
   const [data, setData] = useState<Analytics | null>(null);
@@ -40,7 +40,7 @@ export default function AnalyticsView() {
     const monthPart = m.month?.split('-')[1] || "01";
     const monthIndex = parseInt(monthPart);
     const monthNames = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+
     return {
       name: monthNames[monthIndex] || monthPart,
       actual: Number((m.total / 100000).toFixed(2)), // Scale to Lakhs (L)
@@ -116,8 +116,8 @@ export default function AnalyticsView() {
               <span className={cn(
                 'text-[9px] font-black px-2.5 py-1 rounded-lg border uppercase tracking-widest',
                 kpi.trend === 'up' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
-                kpi.trend === 'down' ? 'bg-error/10 text-error border-error/20' :
-                'bg-white/5 text-white/40 border-white/10'
+                  kpi.trend === 'down' ? 'bg-error/10 text-error border-error/20' :
+                    'bg-white/5 text-white/40 border-white/10'
               )}>
                 {kpi.change}
               </span>
@@ -194,23 +194,24 @@ export default function AnalyticsView() {
         </div>
 
         {/* Top receivers */}
-        <div className="col-span-12 lg:col-span-6 glass-card overflow-hidden">
+
+        {/* <div className="col-span-12 lg:col-span-6 glass-card overflow-hidden">
           <div className="px-10 py-8 border-b border-white/10 flex justify-between items-center bg-white/5">
             <h4 className="text-lg font-black text-white uppercase tracking-wider">Top Agency Receivers</h4>
           </div>
           <div className="p-10">
             <div className="space-y-10">
-              {(data?.monthlyTotals ?? []).slice(0, 4).map((item, i) => {
-                const maxTotal = Math.max(...(data?.monthlyTotals ?? []).map(m => m.total), 1);
+              {(data?.topReceivers ?? []).map((item, i) => {
+                const maxTotal = Math.max(...(data?.topReceivers ?? []).map(r => r.total), 1);
                 const pct = Math.round((item.total / maxTotal) * 100);
                 return (
-                  <div key={item.month} className="flex items-center gap-8 group">
+                  <div key={item.name} className="flex items-center gap-8 group">
                     <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center font-black text-white/20 border border-white/10 text-xs shadow-inner group-hover:border-secondary group-hover:text-secondary transition-all">
                       0{i + 1}
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-3">
-                        <span className="text-[11px] font-black text-white/80 uppercase tracking-wider">{item.month}</span>
+                        <span className="text-[11px] font-black text-white/80 uppercase tracking-wider">{item.name}</span>
                         <span className="text-sm font-black text-white tabular-nums tracking-tight">{formatINR(item.total)}</span>
                       </div>
                       <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden ring-1 ring-white/5">
@@ -225,12 +226,15 @@ export default function AnalyticsView() {
                   </div>
                 );
               })}
+              {(data?.topReceivers ?? []).length === 0 && (
+                <div className="py-20 text-center text-white/10 text-[10px] font-black uppercase tracking-widest">No agency data recorded</div>
+              )}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Regional placeholder */}
-        <div className="col-span-12 lg:col-span-6 glass-card overflow-hidden relative min-h-[460px] flex flex-col group">
+        {/* <div className="col-span-12 lg:col-span-6 glass-card overflow-hidden relative min-h-[460px] flex flex-col group">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526778545894-62b44c097266?auto=format&fit=crop&q=80&w=1470')] bg-cover bg-center grayscale opacity-10 group-hover:scale-105 group-hover:opacity-20 transition-all duration-1000" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#020204] via-[#020204]/80 to-transparent" />
@@ -264,7 +268,7 @@ export default function AnalyticsView() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <footer className="mt-16 pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-10">

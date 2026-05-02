@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
+import { Toaster } from 'react-hot-toast';
 
 // Views
 import Dashboard from './views/Dashboard';
@@ -160,8 +161,8 @@ function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-surface selection:bg-indigo-500/30 overflow-hidden relative">
       {/* Background Atmospheric Elements */}
-      <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-150px] left-[-50px] w-[500px] h-[500px] bg-fuchsia-600/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none no-print" />
+      <div className="absolute bottom-[-150px] left-[-50px] w-[500px] h-[500px] bg-fuchsia-600/5 rounded-full blur-[100px] pointer-events-none no-print" />
 
       <Sidebar />
       <div className="flex-1 flex flex-col min-w-0 z-10">
@@ -200,6 +201,7 @@ export default function App() {
 
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
+      <Toaster position="top-right" />
     </Router>
   );
 }

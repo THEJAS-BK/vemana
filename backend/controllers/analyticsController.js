@@ -3,7 +3,7 @@ const Transaction = require("../models/Transaction");
 // GET /api/analytics
 exports.getAnalytics = async (req, res) => {
   try {
-    const [monthlyTotals, flaggedCount, totalTransactions, volumeResult] =
+    const [monthlyTotals, flaggedCount, totalTransactions, volumeResult, receiversResult] =
       await Promise.all([
         // Monthly totals via aggregation pipeline
         Transaction.aggregate([
@@ -27,9 +27,17 @@ exports.getAnalytics = async (req, res) => {
         Transaction.aggregate([
           { $group: { _id: null, total: { $sum: "$amount" } } },
         ]),
+        // Top receivers aggregation
+        Transaction.aggregate([
+          { $group: { _id: "$receiver", total: { $sum: "$amount" }, count: { $sum: 1 } } },
+          { $sort: { total: -1 } },
+          { $limit: 5 },
+          { $project: { _id: 0, name: "$_id", total: 1, count: 1 } }
+        ]),
       ]);
 
     const totalVolume = volumeResult[0]?.total || 0;
+    const topReceivers = receiversResult; // renamed for clarity below
 
     res.json({
       success: true,
@@ -38,6 +46,7 @@ exports.getAnalytics = async (req, res) => {
         flaggedCount,
         totalTransactions,
         totalVolume,
+        topReceivers,
       },
     });
   } catch (err) {
