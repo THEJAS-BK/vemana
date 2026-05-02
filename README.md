@@ -12,7 +12,7 @@ graph TD
     Frontend -->|REST API| Backend[Express Gateway]
     Backend -->|Ethers.js| Chain[Hardhat Blockchain]
     Backend -->|Mongoose| DB[(MongoDB)]
-    Backend -->|FastAPI Client| AI[Python AI Service]
+    Backend -->|FastAPI Client| AI[Python AI Service]gfgs
     AI -->|Heuristic + ML| Backend
 ```
 
