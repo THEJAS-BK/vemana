@@ -1,97 +1,159 @@
-# 🌌 Aethera: Institutional Fund Governance Portal
+# 🌌 Aethera — Institutional Fund Governance Portal
 
-**Aethera** is a next-generation, blockchain-powered fiscal oversight platform designed for the transparent management and auditing of institutional fund transfers. By combining **Immutable Ledger Technology** with **Real-time AI Fraud Detection**, Aethera ensures every rupee of government allocation is accounted for, verified, and protected.
+> **Transparent by design. Immutable by nature.**
 
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    User((Auditor/Admin)) -->|React + Vite| Frontend[Aethera Audit Portal]
-    Frontend -->|REST API| Backend[Express Gateway]
-    Backend -->|Ethers.js| Chain[Hardhat Blockchain]
-    Backend -->|Mongoose| DB[(MongoDB)]
-    Backend -->|FastAPI Client| AI[Python AI Service]
-    AI -->|Heuristic + ML| Backend
-```
-
-### 🛠️ Technology Stack
--   **Frontend**: React 18, Tailwind CSS, Lucide Icons, Framer Motion.
--   **Backend**: Node.js, Express.js, JWT Authentication.
--   **Blockchain**: Solidity, Hardhat, Ethers.js v6.
--   **AI Microservice**: Python, FastAPI, Pydantic (Neural Fraud Detection).
--   **Database**: MongoDB (Metadata storage & Analytics).
+Aethera is a **blockchain-powered fiscal transparency platform** that enables end-to-end tracking of public funds on a tamper-proof Ethereum ledger, enhanced with AI-driven fraud detection and role-based access control.
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚨 The Problem
 
-### 1. Prerequisite Infrastructure
-Ensure you have the following installed and running:
--   **Node.js** (v18+)
--   **Python** (3.10+)
--   **MongoDB** (Local instance on `localhost:27017`)
+₹27 lakh crore flows through government systems annually — yet:
+- No real-time public visibility  
+- Delayed audits  
+- Fund misallocation goes unnoticed  
+- Citizens lack verification tools  
 
-### 2. Blockchain & Backend Setup
+➡️ **Opacity enables corruption.**
+
+---
+
+## 💡 The Solution
+
+Aethera introduces:
+- 🔗 **Immutable transaction tracking** via Ethereum  
+- 🤖 **AI-powered fraud detection** (heuristics + ML)  
+- 👥 **Role-based dashboards** (Admin / Auditor / Public)  
+- 📜 **Verifiable transaction certificates** (PDF + QR)  
+
+➡️ **Every rupee becomes traceable, auditable, and verifiable.**
+
+---
+
+## 📸 Screenshots
+
+### 📊 Dashboard
+![Dashboard](images/dashboard.png)
+
+### 📜 Transaction Ledger
+![Ledger](images/ledger.png)
+
+### 🔍 Transaction Details & Blockchain Certificate
+![Transaction Details](images/transactionDetails.png)
+
+### 📄 Transaction PDF Certificate
+![PDF](images/transactionpdf.png)
+
+### 📈 Analytics Explorer
+![Analytics](images/analytics.png)
+
+### 🛠️ Admin Panel
+![Admin Panel](images/adminPanel.png)
+
+### 📱 QR Verification
+![QR](images/transactionQR.png)
+
+### ✅ Verified QR
+![Verified QR](images/verifiedQR.png)
+
+---
+
+## 🏗️ Architecture
+Frontend (React + Tailwind)
+↓
+Express API (Node.js)
+↓
+MongoDB (Metadata)
+↓
+Ethereum Smart Contracts (Immutable Ledger)
+↓
+Python FastAPI (AI Fraud Detection)
+
+
+---
+
+## ⚙️ Tech Stack
+
+| Layer | Technology |
+|------|-----------|
+| Frontend | React 18, Vite, Tailwind CSS, Framer Motion |
+| Backend | Node.js, Express.js, MongoDB, Ethers.js v6 |
+| Blockchain | Solidity, Hardhat, Ethereum |
+| AI Service | Python, FastAPI, Uvicorn |
+| Auth | JWT (RBAC: Admin / Auditor / Public) |
+
+---
+
+## ✨ Key Features
+
+- 🔗 Immutable blockchain ledger (Ethereum)
+- 🤖 Dual-layer AI fraud detection  
+- 👥 Role-based access control  
+- 📜 PDF-based transaction certification  
+- 📊 Real-time analytics dashboard  
+- 📱 QR-based public verification  
+- 🛡️ Full blockchain traceability  
+- ⚡ Live system health monitoring  
+
+---
+
+## 🚀 Getting Started
+
+### 1. Start MongoDB
+```bash
+mongod
+
+2. Start Blockchain Node
+
+```bash
+cd backend
+npx hardhat node
+
+3. Deploy Smart Contract
+```bash
+npx hardhat run scripts/deploy.js --network localhost
+
+4. Start Backend
 ```bash
 cd backend
 npm install
-# In separate terminals:
-npx hardhat node       # Terminal 1: Starts Local Blockchain
-npm run deploy         # Terminal 2: Deploys Smart Contracts
-npm start              # Terminal 3: Starts Express API (Auto-seeds data)
-```
+npm start
 
-### 3. Python AI Service (Fraud Detection)
-```bash
+5. Start AI Service
 cd python_service
-python -m venv venv    # Create virtual environment
-.\venv\Scripts\activate # Activate (Windows)
 pip install fastapi uvicorn pydantic
-python app.py          # Starts AI Service on Port 5001
-```
+uvicorn main:app --port 5001
 
-### 4. Frontend Audit Portal
-```bash
+6. Start Frontend
 cd frontend
 npm install
-npm run dev            # Starts Dev Server on http://localhost:3000
-```
+npm run dev
 
----
+Demo Table
 
-## 🛡️ Key Platform Features
+| Role    | Email                                             | Password |
+| ------- | ------------------------------------------------- | -------- |
+| Admin   | [admin@aethera.gov](mailto:admin@aethera.gov)     | admin    |
+| Auditor | [auditor@aethera.gov](mailto:auditor@aethera.gov) | auditor  |
+| Public  | [public@aethera.gov](mailto:public@aethera.gov)   | public   |
 
-### 1. Role-Based Access Control (RBAC)
-Aethera enforces strict data boundaries:
--   **Admin**: Full oversight, transaction simulation, and user management.
--   **Auditor**: Full registry access and certificate generation.
--   **Public**: Transparency-level view (Masked sensitive AI analysis).
+🗂️ Project Structure
+aethera/
+├── frontend/
+├── backend/
+│   ├── contracts/
+│   ├── scripts/
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   ├── services/
+│   └── seed/
+└── python_service/
 
-### 2. Neural Fraud Analysis
-Every transaction undergoes a dual-layer check:
--   **Local Heuristic Scan**: Immediate threshold and round-number validation.
--   **Python ML Service**: Advanced outlier detection using statistical models.
-
-### 3. Smart Institutional Certificates
-Generate high-fidelity, blockchain-verified PDF certificates for legal or audit documentation directly from the browser with professional `@media print` styling.
-
----
-
-## 🔑 Demo Access
-
-| Role | Email | Password |
-| :--- | :--- | :--- |
-| **Admin** | `admin@aethera.gov` | `admin` |
-| **Auditor** | `auditor@aethera.gov` | `auditor` |
-| **Public** | `public@aethera.gov` | `public` |
-
----
-
-## ⚖️ Governance & Compliance
--   **Immutability**: Once a transaction is settled on the Hardhat node, it cannot be altered.
--   **Auditability**: Every transaction carries a unique Blockchain Hash and Parent Hash for cryptographic traceability.
-
-**Developed for the 2026 Institutional Governance Hackathon.**
-# vemana
+Roadmap
+🔌 PFMS integration
+🏦 RBI + CAG connectivity
+📊 D3.js fund flow visualization
+🔐 Multi-factor authentication
+📱 Public mobile app
+🌍 National-scale deployment
