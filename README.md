@@ -1,3 +1,4 @@
+(Hackathon Prototype)
 # 🌌 Aethera — Institutional Fund Governance Portal
 
 > **Transparent by design. Immutable by nature.**
